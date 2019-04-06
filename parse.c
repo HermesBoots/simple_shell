@@ -29,7 +29,10 @@ char **parse(char *str)
 	/* ret array allocation */
 	ret = malloc(sizeof(char *) * (count + 1) + total + count);
 	if (ret == NULL)
+	{
 		error(ERROR_MEMORY);
+		return (NULL);
+	}
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;
 	token = _strtok(str, " \n\t\r");
