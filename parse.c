@@ -31,6 +31,7 @@ char **parse(char *str)
 	if (ret == NULL)
 		error(ERROR_MEMORY);
 	ret[0] = (char *)(ret + count + 1);
+	ret[count] = NULL;
 	token = _strtok(str, " \n\t\r");
 	/* reseting to reuse variables */
 	total = 0, count = 0;
