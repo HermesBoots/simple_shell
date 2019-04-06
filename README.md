@@ -21,7 +21,7 @@ Basically, we want to replicate the basic features of `/bin/sh`
 ## Installation
 
 To instal our shell, clone the repository and run your C compiler of choice.
-We have been using [GCC] (https://gcc.gnu.org). If using GCC:
+We have been using [GCC](https://gcc.gnu.org). If using GCC:
 `gcc -Wall -Werror -Wextra -pedantic *.c -o hsh`
 inside the repository will create the 'hsh' file to run our shell.
 
@@ -42,6 +42,6 @@ break. Feel free to messege either of the authors when a bug is found. We
 may go back and fix it!
 
 ## Authors
-Sam Hermes *HermesBoots*
+Sam Hermes: *HermesBoots*
 
-Kyle Litscher *klitscher*
+Kyle Litscher: *klitscher*
