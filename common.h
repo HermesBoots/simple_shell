@@ -13,6 +13,7 @@ typedef struct SubString
 } SubString;
 
 
+void _memcpy(char *dest, char const *src, size_t count);
 SubString _strtok(char const *str, char const *delim);
 
 #endif
