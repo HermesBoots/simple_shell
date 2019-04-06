@@ -11,7 +11,7 @@
 #define ERROR_PROCESS (4 | ERROR_PERMANENT)
 
 
-void errors(int code);
+void error(int code);
 
 
 #endif /* _ERRORS_H_ */
