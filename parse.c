@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -31,8 +32,8 @@ char **parse(char *str)
 	ret = malloc(sizeof(char *) * (count + 1) + total + count);
 	if (ret == NULL)
 	{
-		error(ERROR_MEMORY);
-		return (NULL);
+		errno = ENOMEM;
+		error();
 	}
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;

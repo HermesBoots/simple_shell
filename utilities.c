@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <unistd.h>
 
+
 /**
  * _strncmp - compare at most the n bytes of two strings
  * @s1: string 1
@@ -27,6 +28,28 @@ int _strncmp(const char *s1, const char *s2, size_t n)
 	}
 	return (0);
 }
+
+
+/**
+ * _strncpy - copy some bytes between strings
+ * @dest: string to copy bytes into
+ * @src: string to copy bytes from
+ * @count: maximum number of bytes to copy
+ *
+ * Return: number of characters copied
+ */
+size_t _strncpy(char *dest, char const *src, size_t count)
+{
+	char const *s;
+	char *d;
+
+	for (d = dest, s = src; count > 0 && *s != '\0'; s++, d++, count--)
+		*d = *s;
+	*d = '\0';
+	return (s - src);
+}
+
+
 /**
  * _memcpy - copy memory between two non-overlapping buffers
  * @dest: buffer to store bytes in
@@ -44,20 +67,22 @@ void _memcpy(char *dest, char const *src, size_t count)
 
 /**
  * print_int - prints an integer
- * @val: the integer
+ * @buffer: buffer to print bytes into
  * @fd: file descriptor to print to
+ *
+ * Return: number of bytes written
  */
-void print_int(int64_t val, int fd)
+size_t print_int(char *buffer, int64_t val)
 {
 	int64_t div = 1000000000000000000l;
-	char buf[20];
-	char *sub = buf;
+	char *sub;
 	signed char digit, leading = 1;
 
+	sub = buffer;
 	if (val == 0)
 	{
-		write(fd, "0", 1);
-		return;
+		*sub = '0';
+		return (1);
 	}
 	if (val < 0)
 		*sub++ = '-';
@@ -76,10 +101,10 @@ void print_int(int64_t val, int fd)
 		}
 		div /= 10;
 	}
-	write(fd, buf, sub - buf);
 	/**
 	 * address minus address is just a number. Contiguous memory.
 	 * Hence array pointer - array pointer gives you the correct
 	 * byte count.
 	 */
+	return (sub - buffer);
 }

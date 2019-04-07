@@ -3,7 +3,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "errors.h"
 
 
 /**
@@ -20,29 +19,33 @@ typedef struct SubString
 
 /**
  * struct ShellGlobals - stores state of the shell that many functions need
- * @self: the original argv[0]
+ * @command_len: length of command string
+ * @self_len: length of self string
  * @command: the name of / path to the command being executed
- * @line: the text of the line being executed
  * @path: the current executable search path
  * @last_status: exit status of previous command
  * @line_num: which input line is being executed
  * @interactive: whether this shell is in interactive mode
+ * @self: the original argv[0]
  */
 struct ShellGlobals
 {
-	SubString self;
-	char const *command;
-	char const *line;
+	size_t command_len;
+	size_t self_len;
 	char const *path;
 	int last_status;
 	uint32_t line_num;
 	char interactive;
+	char command[4109];
+	char self[4120];
 } globals;
 
 
+void error();
 int _strncmp(char const *s1, char const *s2, size_t n);
+size_t _strncpy(char *dest, char const *src, size_t count);
 void _memcpy(char *dest, char const *src, size_t count);
-void print_int(int64_t val, int fd);
+size_t print_int(char *buffer, int64_t val);
 SubString _strtok(char const *str, char const *delim);
 
 
