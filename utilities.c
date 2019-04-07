@@ -4,9 +4,9 @@
 
 /**
  * _strncmp - compare at most the n bytes of two strings
- * @s1 - string 1
- * @s2 - string 2
- * @n - number of bytes
+ * @s1: string 1
+ * @s2: string 2
+ * @n: number of bytes
  *
  * Return: -1, 0, 1 if string is less, equal to or grater than respectively
  */

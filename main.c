@@ -1,7 +1,12 @@
 #include <unistd.h>
 #include "common.h"
 
-
+/**
+ * setup - initalising the global variables
+ * @argc: number of arguments
+ * @argv: array of strings
+ * @envp: list of environment variables
+ */
 void setup(int argc, char *argv[], char *envp[])
 {
 	int index = 0;
@@ -25,7 +30,14 @@ void setup(int argc, char *argv[], char *envp[])
 	}
 }
 
-
+/**
+ * main - starts thew shell
+ * @argc: number of arguments
+ * @argv: array of strings
+ * @envp: list of environment variables
+ *
+ * Return: A specified exit code or status of last command
+ */
 int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 {
 	setup(argc, argv, envp);
