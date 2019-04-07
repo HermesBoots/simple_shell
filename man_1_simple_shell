@@ -1,0 +1,40 @@
+.TH man 1 "06 April 2019" "0.1" "Holberton shell manual"
+.SH NAME
+.B hsh
+- a simple shell in the style of the Bourne shell
+.SH SYNPOSIS
+.B hsh
+.RI [ SCRIPT ]
+.SH DESCRIPTION
+.B hsh
+is a simple shell that shares a general syntax with the Bourne shell. When run in a terminal, it process commands typed into the terminal. Commands can also be given directly to
+.B hsh
+on its standard input. Finally,
+.B hsh
+accepts a single argument,
+.I SCRIPT
+, that it will execute commands from as if they were passed as input.
+.PP
+.B hsh
+is missing many features from the Bourne shell, including quoted and escaped text on the command line, I/O redirection, and command substitution.
+.SH FILES
+When
+.B hsh
+starts, it reads its command history from
+.I $HOME/.simple_shell_history
+. It also writes the history of each session to the end of this file when it exits.
+.SH ENVIRONMENT
+.IP PATH
+As in typical shells,
+.B hsh
+uses this variable to search for executables when a command is entered.
+.IP HOME
+This directory is where
+.B hsh
+stores and reads its history file.
+.SH BUGS
+There is currently no entry point so the project won't compile.
+.SH AUTHORS
+Sam Hermes <701@holbertonschool.com>
+
+Kyle Litscher <672@holbertonschool.com>
