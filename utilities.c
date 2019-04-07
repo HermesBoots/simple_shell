@@ -46,6 +46,7 @@ void print_int(int64_t val, int fd)
 			*sub++ = digit + '0';
 			leading = 0;
 		}
+		div /= 10;
 	}
 	write(fd, buf, sub - buf);
 }
