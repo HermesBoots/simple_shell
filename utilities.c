@@ -2,7 +2,31 @@
 #include <stdint.h>
 #include <unistd.h>
 
+/**
+ * _strncmp - compare at most the n bytes of two strings
+ * @s1 - string 1
+ * @s2 - string 2
+ * @n - number of bytes
+ *
+ * Return: -1, 0, 1 if string is less, equal to or grater than respectively
+ */
+int _strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t i = 0;
 
+	while (n > i)
+	{
+		if (s1[i] == '\0' && s2[i] == '\0')
+			return (0);
+		if (s1[i] == '\0' || s2[i] == '\0')
+			return (-1);
+		if (s1[i] == s2[i])
+			i++;
+		else
+			return (-1);
+	}
+	return (0);
+}
 /**
  * _memcpy - copy memory between two non-overlapping buffers
  * @dest: buffer to store bytes in
@@ -44,9 +68,18 @@ void print_int(int64_t val, int fd)
 		if (digit != 0 || !leading)
 		{
 			*sub++ = digit + '0';
+			/**
+			 * sub++ can go here if ++ was not after *sub++.
+			 * ++ is evaluated after the entire line is resolved
+			 */
 			leading = 0;
 		}
 		div /= 10;
 	}
 	write(fd, buf, sub - buf);
+	/**
+	 * address minus address is just a number. Contiguous memory.
+	 * Hence array pointer - array pointer gives you the correct
+	 * byte count.
+	 */
 }
