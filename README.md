@@ -23,7 +23,7 @@ Basically, we want to replicate the basic features of `/bin/sh`
 To instal our shell, clone the repository and run your C compiler of choice.
 We have been using [GCC](https://gcc.gnu.org). If using GCC:
 `gcc -Wall -Werror -Wextra -pedantic *.c -o hsh`
-inside the repository will create the 'hsh' file to run our shell.
+inside the repository will create the `hsh` file to run our shell.
 
 ## Usage
 
