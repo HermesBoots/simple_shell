@@ -1,5 +1,7 @@
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include "common.h"
 
@@ -69,4 +71,29 @@ char find_command(char **argv)
 		}
 	}
 	return (find_in_path(argv));
+}
+
+
+
+void run_program(char **argv, char **envp)
+{
+	pid_t pid;
+	int status;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		execve(globals.command, argv, envp);
+		error(argv[0]);
+		exit(globals.last_status);
+	}
+	else if (pid > 0)
+	{
+		wait(&status);
+		globals.last_status = WEXITSTATUS(status);
+	}
+	else
+	{
+		error(argv[0]);
+	}
 }
