@@ -32,10 +32,7 @@ char **parse(char *str)
 	ret = malloc(sizeof(char *) * (count + 1) + total + count);
 	if (ret == NULL)
 	{
-		errno = ENOMEM;
-		token = _strtok(str, " \n\t\r");
-		token.text[token.length] = '\0';
-		error(token.text);
+		error(NULL);
 	}
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;

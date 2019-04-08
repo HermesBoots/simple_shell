@@ -19,7 +19,7 @@ typedef struct SubString
 
 /**
  * struct ShellGlobals - stores state of the shell that many functions need
- * @command_len: length of command string
+ * @line: buffer for current input line
  * @self_len: length of self string
  * @command: the name of / path to the command being executed
  * @path: the current executable search path
@@ -31,6 +31,7 @@ typedef struct SubString
 struct ShellGlobals
 {
 	size_t self_len;
+	char *line;
 	char *path;
 	int last_status;
 	uint32_t line_num;
@@ -40,7 +41,7 @@ struct ShellGlobals
 } globals;
 
 
-void error(char const *command);
+void error(char *command);
 int _strncmp(char const *s1, char const *s2, size_t n);
 size_t _strncpy(char *dest, char const *src, size_t count);
 void _memcpy(char *dest, char const *src, size_t count);
@@ -48,6 +49,7 @@ size_t print_int(char *buffer, int64_t val);
 SubString _strtok(char *str, char const *delim);
 char **parse(char *str);
 char find_command(char **argv);
+void run_program(char **argv, char **envp);
 
 
 #endif

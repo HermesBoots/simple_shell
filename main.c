@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,18 +47,32 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
  */
 int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 {
+	char found;
 	char **parsed;
-	int i = 0;
+	size_t size;
+	ssize_t count;
 
 	setup(argc, argv, envp);
-	parsed = parse(argv[1]);
-	while (parsed[i] != NULL)
+	while (1)
 	{
-		printf("argv[%d]: %s\n", i, parsed[i]);
-		i++;
+		errno = 0;
+		if (globals.interactive)
+			write(STDERR_FILENO, "$ ", 2);
+		count = getline(&globals.line, &size, stdin);
+		if (count < 1)
+			break;
+		parsed = parse(globals.line);
+		if (parsed == NULL)
+			continue;
+		found = find_command(parsed);
+		if (found)
+			run_program(parsed, envp);
+		globals.line_num++;
+		free(parsed);
 	}
-	printf("found? %s\n", find_command(parsed) ? "true" : "false");
-	printf("command: %s\n", globals.command);
-	free(parsed);
-	return (0);
+	if (errno == 0)
+		write(STDERR_FILENO, "\n", 1);
+	else
+		error(NULL);
+	return (globals.last_status);
 }

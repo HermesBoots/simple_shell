@@ -10,9 +10,9 @@
  * error - print an error message and possibly exit
  * @command: first word on line being executed
  */
-void error(char const *command)
+void error(char *command)
 {
-	size_t index;
+	size_t index = 0;
 
 	if (errno == 0)
 		return;
@@ -28,19 +28,28 @@ void error(char const *command)
 	}
 	else
 	{
-		index = _strncpy(globals.command, command, 4096);
-		index += _strncpy(globals.command + index, ": not found\n", 12);
+		if (command != NULL)
+		{
+			index = _strncpy(globals.command, command, 4096);
+			index += _strncpy(globals.command + index, ": ", 2);
+		}
+		index += _strncpy(globals.command + index, "not found\n", 10);
 		write(STDERR_FILENO, globals.command, index);
 	}
+	if (errno == EACCES)
+		globals.last_status = 126;
+	else if (errno == ENOENT)
+		globals.last_status = 127;
+	else
+		globals.last_status = 2;
 	if (
-		errno != ENOENT &&
-		errno != ENOTDIR &&
-		errno != EACCES &&
-		errno != ENAMETOOLONG &&
-		errno != ENOEXEC &&
-		errno != EPERM &&
-		errno != ELOOP &&
-		errno != ETXTBSY
+		errno != ENOENT && errno != ENOTDIR && errno != EACCES &&
+		errno != ENAMETOOLONG && errno != ENOEXEC && errno != EPERM &&
+		errno != ELOOP && errno != ETXTBSY
 	)
-		exit(errno);
+	{
+		free(globals.line);
+		free(command);
+		exit(globals.last_status);
+	}
 }
