@@ -2,9 +2,9 @@
 #include "common.h"
 
 
-SubString _strtok(char const *str, char const *delim)
+SubString _strtok(char *str, char const *delim)
 {
-	static char const *string;
+	static char *string;
 	SubString ret = {NULL, 0};
 	char const *delimiter;
 

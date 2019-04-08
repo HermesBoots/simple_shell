@@ -33,7 +33,9 @@ char **parse(char *str)
 	if (ret == NULL)
 	{
 		errno = ENOMEM;
-		error();
+		token = _strtok(str, " \n\t\r");
+		token.text[token.length] = '\0';
+		error(token.text);
 	}
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;

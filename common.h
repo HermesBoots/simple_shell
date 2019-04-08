@@ -12,7 +12,7 @@
  */
 typedef struct SubString
 {
-	char const *text;
+	char *text;
 	size_t length;
 } SubString;
 
@@ -30,9 +30,8 @@ typedef struct SubString
  */
 struct ShellGlobals
 {
-	size_t command_len;
 	size_t self_len;
-	char const *path;
+	char *path;
 	int last_status;
 	uint32_t line_num;
 	char interactive;
@@ -41,12 +40,14 @@ struct ShellGlobals
 } globals;
 
 
-void error(void);
+void error(char const *command);
 int _strncmp(char const *s1, char const *s2, size_t n);
 size_t _strncpy(char *dest, char const *src, size_t count);
 void _memcpy(char *dest, char const *src, size_t count);
 size_t print_int(char *buffer, int64_t val);
-SubString _strtok(char const *str, char const *delim);
+SubString _strtok(char *str, char const *delim);
+char **parse(char *str);
+char find_command(char **argv);
 
 
 #endif

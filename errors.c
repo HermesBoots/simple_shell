@@ -8,8 +8,9 @@
 
 /**
  * error - print an error message and possibly exit
+ * @command: first word on line being executed
  */
-void error(void)
+void error(char const *command)
 {
 	size_t index;
 
@@ -27,10 +28,9 @@ void error(void)
 	}
 	else
 	{
-		index = globals.command_len;
+		index = _strncpy(globals.command, command, 4096);
 		index += _strncpy(globals.command + index, ": not found\n", 12);
 		write(STDERR_FILENO, globals.command, index);
-		globals.command[globals.command_len] = '\0';
 	}
 	if (
 		errno != ENOENT &&
