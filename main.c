@@ -13,9 +13,9 @@ void setup(int argc, char *argv[], char *envp[])
 	char *path = "PATH=";
 	int str_chk;
 
-	while (argv[0][globals.self.length] != '\0')
-		globals.self.length++;
-	globals.self.text = argv[0];
+	while (argv[0][globals.self_len] != '\0')
+		globals.self_len++;
+	globals.self = argv[0];
 	globals.line_num = 1;
 	if (isatty(STDOUT_FILENO) == 1 && isatty(STDOUT_FILENO) == 1)
 		globals.interactive = 1;
@@ -40,6 +40,18 @@ void setup(int argc, char *argv[], char *envp[])
  */
 int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 {
+	char **parsed;
+	int i = 0;
+
 	setup(argc, argv, envp);
-	return (globals.last_status);
+	parsed = parse(argv[1]);
+	while (parsed[i] != NULL)
+	{
+		printf("argv[%d]: %s\n", i, parsed[i]);
+		i++;
+	}
+	printf("found? %s\n", find_command(parsed) ? "true" : "false");
+	printf("command: %s\n", globals.command);
+	free(parsed);
+	return (0);
 }
