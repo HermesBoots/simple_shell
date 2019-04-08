@@ -41,7 +41,7 @@ struct ShellGlobals
 } globals;
 
 
-void error();
+void error(void);
 int _strncmp(char const *s1, char const *s2, size_t n);
 size_t _strncpy(char *dest, char const *src, size_t count);
 void _memcpy(char *dest, char const *src, size_t count);

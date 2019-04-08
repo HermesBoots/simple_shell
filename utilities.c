@@ -68,7 +68,7 @@ void _memcpy(char *dest, char const *src, size_t count)
 /**
  * print_int - prints an integer
  * @buffer: buffer to print bytes into
- * @fd: file descriptor to print to
+ * @val: value to print
  *
  * Return: number of bytes written
  */

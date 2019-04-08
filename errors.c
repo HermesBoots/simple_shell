@@ -8,9 +8,8 @@
 
 /**
  * error - print an error message and possibly exit
- * @code: the error code as defined in errors.h
  */
-void error()
+void error(void)
 {
 	size_t index;
 
