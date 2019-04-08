@@ -8,6 +8,36 @@
 
 
 /**
+ * find_in_path - searches in PATH environment variable for argv[0]
+ * @argv: argv array to be given to child process
+ *
+ * Return: 1 if command exists, 0 if it doesn't
+ */
+char find_in_path(char **argv)
+{
+	size_t index;
+	SubString tok;
+
+	tok = _strtok(globals.path, ":");
+	while (tok.text != NULL)
+	{
+		index = _strncpy(globals.command, tok.text, MIN(tok.length, 4096));
+		if (globals.command[index - 1] != '/')
+			globals.command[index++] = '/';
+		index += _strncpy(globals.command + index, argv[0], 4096 - index);
+		errno = 0;
+		if (access(globals.command, F_OK) == 0)
+			return (1);
+		tok = _strtok(NULL, ":");
+	}
+	errno = ENOENT;
+	error(argv[0]);
+	globals.command[0] = '\0';
+	return (0);
+}
+
+
+/**
  * find_command - searches for path to argv[0]
  * @argv: argv array to be given to child process
  *
@@ -19,43 +49,24 @@
 char find_command(char **argv)
 {
 	size_t index;
-	SubString tok;
 
-	globals.command_len = 0;
-	for (index = 0; index < 4095; index++)
+	errno = 0;
+	for (index = 0; index < 4095 && argv[0][index] != '\0'; index++)
 	{
 		if (argv[0][index] == '/')
 		{
-			errno = 0;
-			if (access(argv[0], F_OK) == 0)
+			index = _strncpy(globals.command, argv[0], 4096);
+			if (access(globals.command, F_OK) == 0)
 			{
-				index = _strncpy(globals.command, argv[0], 4096);
-				globals.command_len = index;
 				return (1);
 			}
 			else
 			{
-				error();
+				error(argv[0]);
 				globals.command[0] = '\0';
 				return (0);
 			}
 		}
 	}
-	tok = _strtok(globals.path, ":");
-	while (tok.text != NULL)
-	{
-		index = _strncpy(globals.command, tok.text, MIN(tok.length, 4096));
-		index += _strncpy(globals.command, argv[0], 4096 - index);
-		errno = 0;
-		if (access(globals.command, F_OK) == 0)
-		{
-			globals.command_len = index;
-			return (1);
-		}
-		tok = _strtok(NULL, ":");
-	}
-	errno = ENOENT;
-	error();
-	globals.command[0] = '\0';
-	return (0);
+	return (find_in_path(argv));
 }
