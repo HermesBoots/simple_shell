@@ -1,5 +1,9 @@
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "common.h"
+
 
 /**
  * setup - initalising the global variables
@@ -7,26 +11,28 @@
  * @argv: array of strings
  * @envp: list of environment variables
  */
-void setup(int argc, char *argv[], char *envp[])
+void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
 {
 	int index = 0;
 	char *path = "PATH=";
 	int str_chk;
 
+	signal(SIGINT, SIG_IGN);
 	while (argv[0][globals.self_len] != '\0')
 		globals.self_len++;
-	globals.self = argv[0];
+	_strncpy(globals.self, argv[0], 4096);
 	globals.line_num = 1;
 	if (isatty(STDOUT_FILENO) == 1 && isatty(STDOUT_FILENO) == 1)
 		globals.interactive = 1;
 	while (envp[index] != NULL)
 	{
 		str_chk = _strncmp(envp[index], path, 5);
-		if (str_chk == 1)
+		if (str_chk == 0)
 		{
 			globals.path = envp[index];
 			break;
 		}
+		index++;
 	}
 }
 
