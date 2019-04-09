@@ -28,9 +28,11 @@ void error(char *message)
 		for (index = 0; message[index] != '\0'; index++)
 			;
 		write(STDERR_FILENO, message, index);
+		write(STDERR_FILENO, "\n", 1);
 	}
 	else
 	{
+		globals.command.text[globals.command.length] = '\0';
 		perror(globals.command.text);
 	}
 	if (errno == EACCES)
@@ -44,5 +46,8 @@ void error(char *message)
 		errno != ENAMETOOLONG && errno != ENOEXEC && errno != EPERM &&
 		errno != ELOOP && errno != ETXTBSY
 	)
+	{
+		free(globals.line);
 		exit(globals.last_status);
+	}
 }

@@ -56,7 +56,7 @@ void _memcpy(char *dest, char const *src, size_t count);
 size_t print_int(char *buffer, int64_t val);
 SubString _strtok(char *str, char const *delim);
 char **parse(char *str);
-char find_command(char **argv);
+char run_builtin(char **argv, char **envp);
 void run_program(char **argv, char **envp);
 
 

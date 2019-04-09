@@ -15,27 +15,35 @@
  *
  * Return: 1 if command exists, 0 if it doesn't
  */
-char find_in_path(char **argv)
+char find_in_path(char **argv, char **envp)
 {
+	int code = ENOENT;
 	size_t index;
 	SubString tok;
 
 	tok = _strtok(globals.path, ":");
 	while (tok.text != NULL)
 	{
-		index = _strncpy(globals.command, tok.text, MIN(tok.length, 4096));
-		if (globals.command[index - 1] != '/')
-			globals.command[index++] = '/';
-		index += _strncpy(globals.command + index, argv[0], 4096 - index);
+		index = _strncpy(globals.outbuf, tok.text, MIN(tok.length, 4097));
+		if (globals.outbuf[index - 1] != '/')
+			globals.outbuf[index++] = '/';
+		index += _strncpy(globals.outbuf + index, argv[0], 4097 - index);
 		errno = 0;
-		if (access(globals.command, F_OK) == 0)
-			return (1);
+		if (access(globals.outbuf, F_OK) == 0)
+		{
+			execve(globals.outbuf, argv, envp);
+			code = errno;
+		}
 		tok = _strtok(NULL, ":");
 	}
-	errno = ENOENT;
-	error(argv[0]);
-	globals.command[0] = '\0';
-	return (0);
+	errno = code;
+	free(argv);
+	if (errno == ENOENT || errno == ENOTDIR)
+		error("not found");
+	else
+		error(NULL);
+	free(globals.line);
+	exit(globals.last_status);
 }
 
 
@@ -48,29 +56,33 @@ char find_in_path(char **argv)
  *
  * Return: 1 if command exists, 0 if it doesn't
  */
-char find_command(char **argv)
+void find_command(char **argv, char **envp)
 {
 	size_t index;
 
 	errno = 0;
-	for (index = 0; index < 4095 && argv[0][index] != '\0'; index++)
+	for (index = 0; index < 4096 && argv[0][index] != '\0'; index++)
 	{
 		if (argv[0][index] == '/')
 		{
-			index = _strncpy(globals.command, argv[0], 4096);
-			if (access(globals.command, F_OK) == 0)
+			if (access(argv[0], F_OK) == 0)
 			{
-				return (1);
+				execve(argv[0], argv, envp);
+				free(argv);
+				error(NULL);
+				free(globals.line);
+				exit(globals.last_status);
 			}
 			else
 			{
-				error(argv[0]);
-				globals.command[0] = '\0';
-				return (0);
+				free(argv);
+				error("not found");
+				free(globals.line);
+				exit(globals.last_status);
 			}
 		}
 	}
-	return (find_in_path(argv));
+	find_in_path(argv, envp);
 }
 
 
@@ -83,9 +95,7 @@ void run_program(char **argv, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		execve(globals.command, argv, envp);
-		error(argv[0]);
-		exit(globals.last_status);
+		find_command(argv, envp);
 	}
 	else if (pid > 0)
 	{
@@ -94,6 +104,6 @@ void run_program(char **argv, char **envp)
 	}
 	else
 	{
-		error(argv[0]);
+		error(NULL);
 	}
 }

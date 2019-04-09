@@ -48,7 +48,6 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
  */
 int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 {
-	char found;
 	char **parsed;
 	size_t size;
 	ssize_t count;
@@ -65,9 +64,7 @@ int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 		parsed = parse(globals.line);
 		if (parsed == NULL)
 			continue;
-		found = find_command(parsed);
-		if (found)
-			run_program(parsed, envp);
+		run_program(parsed, envp);
 		globals.line_num++;
 		free(parsed);
 	}
@@ -75,5 +72,6 @@ int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 		write(STDERR_FILENO, "\n", 1);
 	else
 		error(NULL);
+	free(globals.line);
 	return (globals.last_status);
 }
