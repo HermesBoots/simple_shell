@@ -19,6 +19,7 @@ char **parse(char *str)
 	char **ret;
 
 	token = _strtok(str, " \n\t\r");
+	globals.command = token;
 	/* Finding dimensions of argv */
 	while (token.text != NULL)
 	{
@@ -32,6 +33,7 @@ char **parse(char *str)
 	ret = malloc(sizeof(char *) * (count + 1) + total + count);
 	if (ret == NULL)
 	{
+		free(str);
 		error(NULL);
 	}
 	ret[0] = (char *)(ret + count + 1);

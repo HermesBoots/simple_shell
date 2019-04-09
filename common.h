@@ -19,26 +19,34 @@ typedef struct SubString
 
 /**
  * struct ShellGlobals - stores state of the shell that many functions need
+ * @command: first word of command line
+ * @self: the original argv[0]
  * @line: buffer for current input line
- * @self_len: length of self string
- * @command: the name of / path to the command being executed
  * @path: the current executable search path
  * @last_status: exit status of previous command
  * @line_num: which input line is being executed
  * @interactive: whether this shell is in interactive mode
- * @self: the original argv[0]
+ * @outbuf: buffer used to store path to command and error output
  */
 struct ShellGlobals
 {
-	size_t self_len;
+	SubString command;
+	SubString self;
 	char *line;
 	char *path;
 	int last_status;
 	uint32_t line_num;
 	char interactive;
-	char command[4109];
-	char self[4120];
+	/*
+	 * MAX_PATH (4096) for argv[0] +
+	 * 20 for length of INT64_MIN as a string
+	 * 4 for the two ": " separators
+	 */
+	char outbuf[4120];
 } globals;
+
+
+typedef int (*builtin)(char *, char **, char **);
 
 
 void error(char *command);

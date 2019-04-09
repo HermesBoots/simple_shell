@@ -8,33 +8,30 @@
 
 /**
  * error - print an error message and possibly exit
- * @command: first word on line being executed
+ * @message: custom error message if desired
  */
-void error(char *command)
+void error(char *message)
 {
-	size_t index = 0;
+	size_t index;
 
 	if (errno == 0)
 		return;
-	index = globals.self_len;
-	index += _strncpy(globals.self + index, ": ", 2);
-	index += print_int(globals.self + index, globals.line_num);
-	index += _strncpy(globals.self + index, ": ", 2);
-	write(STDERR_FILENO, globals.self, index);
-	globals.self[globals.self_len] = '\0';
-	if (errno != ENOENT && errno != ENOTDIR)
+	index = _strncpy(globals.outbuf, globals.self.text, globals.self.length);
+	index += _strncpy(globals.outbuf + index, ": ", 2);
+	index += print_int(globals.outbuf + index, globals.line_num);
+	index += _strncpy(globals.outbuf + index, ": ", 2);
+	write(STDERR_FILENO, globals.outbuf, index);
+	if (message != NULL)
 	{
-		perror(globals.command);
+		write(STDERR_FILENO, globals.command.text, globals.command.length);
+		write(STDERR_FILENO, ": ", 2);
+		for (index = 0; message[index] != '\0'; index++)
+			;
+		write(STDERR_FILENO, message, index);
 	}
 	else
 	{
-		if (command != NULL)
-		{
-			index = _strncpy(globals.command, command, 4096);
-			index += _strncpy(globals.command + index, ": ", 2);
-		}
-		index += _strncpy(globals.command + index, "not found\n", 10);
-		write(STDERR_FILENO, globals.command, index);
+		perror(globals.command.text);
 	}
 	if (errno == EACCES)
 		globals.last_status = 126;
@@ -47,9 +44,5 @@ void error(char *command)
 		errno != ENAMETOOLONG && errno != ENOEXEC && errno != EPERM &&
 		errno != ELOOP && errno != ETXTBSY
 	)
-	{
-		free(globals.line);
-		free(command);
 		exit(globals.last_status);
-	}
 }

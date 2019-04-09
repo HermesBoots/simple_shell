@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <linux/limits.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,11 +20,11 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
 	int str_chk;
 
 	signal(SIGINT, SIG_IGN);
-	while (argv[0][globals.self_len] != '\0')
-		globals.self_len++;
-	_strncpy(globals.self, argv[0], 4096);
+	while (argv[0][globals.self.length] != '\0')
+		globals.self.length++;
+	globals.self.text = argv[0];
 	globals.line_num = 1;
-	if (isatty(STDOUT_FILENO) == 1 && isatty(STDOUT_FILENO) == 1)
+	if (isatty(STDOUT_FILENO) == 1 && isatty(STDIN_FILENO) == 1)
 		globals.interactive = 1;
 	while (envp[index] != NULL)
 	{
@@ -70,7 +71,7 @@ int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 		globals.line_num++;
 		free(parsed);
 	}
-	if (errno == 0)
+	if (errno == 0 && globals.interactive)
 		write(STDERR_FILENO, "\n", 1);
 	else
 		error(NULL);
