@@ -46,7 +46,7 @@ struct ShellGlobals
 } globals;
 
 
-typedef int (*builtin)(char *, char **, char **);
+typedef int (*builtin)(char **, char **);
 
 
 void error(char *command);
