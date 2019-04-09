@@ -12,8 +12,7 @@
 /**
  * find_in_path - searches in PATH environment variable for argv[0]
  * @argv: argv array to be given to child process
- *
- * Return: 1 if command exists, 0 if it doesn't
+ * @envp: pointer to environment variables
  */
 char find_in_path(char **argv, char **envp)
 {
@@ -50,11 +49,7 @@ char find_in_path(char **argv, char **envp)
 /**
  * find_command - searches for path to argv[0]
  * @argv: argv array to be given to child process
- *
- * Description: This function doesn't modify argv, but it does store the
- * resulting path in globals.command and sets globals.command_len appropriately
- *
- * Return: 1 if command exists, 0 if it doesn't
+ * @envp: pointer to environment variables
  */
 void find_command(char **argv, char **envp)
 {
@@ -86,7 +81,11 @@ void find_command(char **argv, char **envp)
 }
 
 
-
+/**
+ * run_program - Child finds program, if found executes program
+ * @argv: the entire command line as broken up tokens
+ * @envp: pointer to environment variables
+ */
 void run_program(char **argv, char **envp)
 {
 	pid_t pid;
