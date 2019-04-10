@@ -12,15 +12,17 @@
  */
 void *_realloc(void *ptr, size_t size)
 {
-	char *old = ptr;
+	char *old, *new;
+	size_t i;
 
-	ptr = malloc(size);
-	if (ptr == NULL)
+	old = ptr;
+	new = malloc(size);
+	if (new == NULL)
 		error(NULL);
 	for (i = 0; i < size / 2; i++)
-		ptr[i] = old[i];
+		new[i] = old[i];
 	free(old);
-	return (ptr);
+	return (new);
 }
 
 
@@ -34,15 +36,13 @@ void *_realloc(void *ptr, size_t size)
  */
 ssize_t _getline(char **line, size_t *size, int fd)
 {
-	static char terminated;
-	static size_t unused;
-	size_t i, j, total = 0;
+	static size_t unused, terminated;
+	size_t i, j, total;
 	ssize_t count;
 
 	if (*line == NULL)
 	{
-		*size = 128;
-		*line = malloc(128);
+		*size = 128, *line = malloc(128);
 		if (*line == NULL)
 			error(NULL);
 	}
@@ -54,24 +54,26 @@ ssize_t _getline(char **line, size_t *size, int fd)
 		for (j = 0; j < unused; j++, i++)
 			line[0][j] = line[0][i];
 	}
+	total = unused;
 	do {
-		for (i = 0; i < unused + total; i++)
+		for (i = 0; i < total; i++)
 		{
 			if (line[0][i] == '\n')
 			{
-				if (++i < unused + total)
+				if (++i < total)
 					terminated = line[0][i];
-				line[0][i] = '\0';
-				unused = unused + total - i;
+				line[0][i] = '\0', unused = total - i;
 				return (i);
 			}
 		}
-		total += count = read(fd, *line + unused, *size - unused - total);
-		if (unused + total == *size)
+		total += count = read(fd, *line + total, *size - total);
+		if (total == *size)
 			*line = _realloc(*line, *size *= 2);
 	} while (count > 0);
 	if (count < 0)
 		error(NULL);
-	line[0][total + unused] = '\0';
-	return (total + unused);
+	else if (count == 0 && total < 1)
+		return (-1);
+	unused = 0, line[0][total] = '\0';
+	return (total);
 }
