@@ -23,6 +23,7 @@ typedef struct SubString
  * @self: the original argv[0]
  * @line: buffer for current input line
  * @path: the current executable search path
+ * @input: file descriptor to read commands from
  * @last_status: exit status of previous command
  * @line_num: which input line is being executed
  * @interactive: whether this shell is in interactive mode
@@ -34,6 +35,7 @@ struct ShellGlobals
 	SubString self;
 	char *line;
 	char *path;
+	int input;
 	int last_status;
 	uint32_t line_num;
 	char interactive;
@@ -58,6 +60,7 @@ SubString _strtok(char *str, char const *delim);
 char **parse(char *str);
 char run_builtin(char **argv, char **envp);
 void run_program(char **argv, char **envp);
+ssize_t _getline(char **line, size_t *size, int fd);
 
 
 #endif

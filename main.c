@@ -70,7 +70,7 @@ int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 		errno = 0;
 		if (globals.interactive)
 			write(STDERR_FILENO, "$ ", 2);
-		count = getline(&globals.line, &size, stdin);
+		count = _getline(&globals.line, &size, STDIN_FILENO);
 		if (count < 1)
 			break;
 		parsed = parse(globals.line);
