@@ -13,6 +13,8 @@
  * find_in_path - searches in PATH environment variable for argv[0]
  * @argv: argv array to be given to child process
  * @envp: pointer to environment variables
+ *
+ * Return: Nothing?
  */
 char find_in_path(char **argv, char **envp)
 {

@@ -3,7 +3,13 @@
 #include <unistd.h>
 #include "common.h"
 
-
+/**
+ * builtin_exit - exits the shell
+ * @argv: pointer to tokenized command line string
+ * @envp: pointer to environment variable
+ *
+ * Return: 2 or exit the shell
+ */
 int builtin_exit(char **argv, char **envp __attribute__((unused)))
 {
 	static int const max = 2147483647;
@@ -41,7 +47,13 @@ int builtin_exit(char **argv, char **envp __attribute__((unused)))
 	return (2);
 }
 
-
+/**
+ * builtin_env - creating the BUILT-IN envp variable for our shell
+ * @argv: pointer to tokenized command line string
+ * @envp: pointer to environment variable
+ *
+ * Return: 0;
+ */
 int builtin_env(char **argv __attribute__((unused)), char **envp)
 {
 	unsigned int index;
@@ -57,7 +69,13 @@ int builtin_env(char **argv __attribute__((unused)), char **envp)
 	return (0);
 }
 
-
+/**
+ * run_builtin - run the builtin commands we implemented
+ * @argv: pointer to a tokenized array of strings
+ * @envp: pointer to the environment variable
+ *
+ * Return: 1 on success, 0 on failure
+ */
 char run_builtin(char **argv, char **envp)
 {
 	static builtin functions[2] = {&builtin_exit, &builtin_env};
