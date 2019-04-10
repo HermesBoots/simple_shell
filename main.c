@@ -8,6 +8,16 @@
 
 
 /**
+ * sigint_handler - handle the Ctrl+C signal
+ * @sig: signal number, always the same so ignored
+ */
+void sigint_handler(int sig __attribute__((unused)))
+{
+	write(STDERR_FILENO, "\n$ ", 3);
+}
+
+
+/**
  * setup - initalising the global variables
  * @argc: number of arguments
  * @argv: array of strings
@@ -19,7 +29,7 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
 	char *path = "PATH=";
 	int str_chk;
 
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, &sigint_handler);
 	while (argv[0][globals.self.length] != '\0')
 		globals.self.length++;
 	globals.self.text = argv[0];
@@ -37,6 +47,7 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
 		index++;
 	}
 }
+
 
 /**
  * main - starts thew shell
