@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <fcntl.h>
 #include <linux/limits.h>
 #include <signal.h>
 #include <stdio.h>
@@ -23,28 +24,47 @@ void sigint_handler(int sig __attribute__((unused)))
  * @argv: array of strings
  * @envp: list of environment variables
  */
-void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
+void setup(int argc, char *argv[], char *envp[])
 {
 	int index = 0;
 	char *path = "PATH=";
-	int str_chk;
 
-	signal(SIGINT, &sigint_handler);
+	globals.self.text = argv[0];
 	while (argv[0][globals.self.length] != '\0')
 		globals.self.length++;
-	globals.self.text = argv[0];
-	globals.line_num = 1;
-	if (isatty(STDOUT_FILENO) == 1 && isatty(STDIN_FILENO) == 1)
-		globals.interactive = 1;
-	while (envp[index] != NULL)
+	if (argc > 1)
 	{
-		str_chk = _strncmp(envp[index], path, 5);
-		if (str_chk == 0)
+		globals.input = open(argv[1], O_RDONLY);
+		if (globals.input < 0)
 		{
-			globals.path = envp[index];
-			break;
+			for (; argv[0][index] != '\0'; index++)
+				;
+			_strncpy(globals.outbuf, argv[0], index);
+			_strncpy(globals.outbuf + index, ": 0: ", 5);
+			write(STDERR_FILENO, globals.outbuf, index + 5);
+			for (; argv[1][index] != '\0'; index++)
+				;
+			write(STDERR_FILENO, "Can't open ", 11);
+			write(STDERR_FILENO, argv[1], index);
+			write(STDERR_FILENO, "\n", 1);
+			exit(127);
 		}
-		index++;
+	}
+	else
+	{
+		globals.input = STDIN_FILENO;
+	}
+	globals.line_num = 1;
+	if (isatty(STDOUT_FILENO) == 1 && isatty(globals.input) == 1)
+	{
+		globals.interactive = 1;
+		signal(SIGINT, &sigint_handler);
+	}
+	globals.path = "";
+	for (; envp[index] != NULL; index++)
+	{
+		if (_strncmp(envp[index], path, 5) == 0)
+			globals.path = envp[index];
 	}
 }
 
@@ -57,7 +77,7 @@ void setup(int argc __attribute__((unused)), char *argv[], char *envp[])
  *
  * Return: A specified exit code or status of last command
  */
-int main(int argc __attribute__((unused)), char *argv[], char *envp[])
+int main(int argc, char *argv[], char *envp[])
 {
 	char found;
 	char **parsed;
@@ -70,7 +90,7 @@ int main(int argc __attribute__((unused)), char *argv[], char *envp[])
 		errno = 0;
 		if (globals.interactive)
 			write(STDERR_FILENO, "$ ", 2);
-		count = _getline(&globals.line, &size, STDIN_FILENO);
+		count = _getline(&globals.line, &size, globals.input);
 		if (count < 1)
 			break;
 		parsed = parse(globals.line);
