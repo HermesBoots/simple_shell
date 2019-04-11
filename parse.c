@@ -20,16 +20,16 @@ char **parse(char *str)
 
 	token = _strtok(str, " \n\t\r");
 	globals.command = token;
-	/* Finding dimensions of argv */
 	while (token.text != NULL)
 	{
+		if (token.text[0] == '#')
+			break;
 		count++;
 		total += token.length;
 		token = _strtok(NULL, " \n\t\r");
 	}
 	if (count == 0)
 		return (NULL);
-	/* ret array allocation */
 	ret = malloc(sizeof(char *) * (count + 1) + total + count);
 	if (ret == NULL)
 	{
@@ -39,11 +39,11 @@ char **parse(char *str)
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;
 	token = _strtok(str, " \n\t\r");
-	/* reseting to reuse variables */
 	total = 0, count = 0;
-	/* populating the ret array and filling in the strs they point to */
 	while (token.text != NULL)
 	{
+		if (token.text[0] == '#')
+			break;
 		ret[count] = ret[0] + total;
 		total += token.length + 1;
 		_memcpy(ret[count], token.text, token.length);
