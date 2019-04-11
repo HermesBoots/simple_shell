@@ -54,7 +54,6 @@ void setup(int argc, char *argv[], char *envp[])
 	{
 		globals.input = STDIN_FILENO;
 	}
-	globals.line_num = 1;
 	if (isatty(STDOUT_FILENO) == 1 && isatty(globals.input) == 1)
 	{
 		globals.interactive = 1;
@@ -91,6 +90,7 @@ int main(int argc, char *argv[], char *envp[])
 		if (globals.interactive)
 			write(STDERR_FILENO, "$ ", 2);
 		count = _getline(&globals.line, &size, globals.input);
+		globals.line_num++;
 		if (count < 1)
 			break;
 		parsed = parse(globals.line);
@@ -99,7 +99,6 @@ int main(int argc, char *argv[], char *envp[])
 		found = run_builtin(parsed, envp);
 		if (!found)
 			run_program(parsed, envp);
-		globals.line_num++;
 		free(parsed);
 	}
 	if (errno == 0 && globals.interactive)
