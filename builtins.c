@@ -69,6 +69,41 @@ int builtin_env(char **argv __attribute__((unused)), char **envp)
 	return (0);
 }
 
+
+int builtin_help(char **argv, char **envp __attribute__((unused)))
+{
+#include "help_pages.def"
+	static char const *commands[] = {"cd", "env", "exit", "help"};
+	static char const *pages[] = {help_cd, help_env, help_exit, help_help};
+	static unsigned int const count = 4;
+	static size_t const max = 4;
+	unsigned int i;
+
+	if (argv[1] == NULL)
+	{
+		write(STDOUT_FILENO, help_general, len_general);
+		return (0);
+	}
+	for (i = 0; i < count; i++)
+	{
+		if (_strncmp(commands[i], argv[1], max) == 0)
+		{
+			write(STDOUT_FILENO, pages[i], lengths[i]);
+			return (0);
+		}
+	}
+	_strncpy(globals.outbuf, globals.self.text, globals.self.length);
+	_strncpy(globals.outbuf + globals.self.length,
+		": help: no help topics match `", 30);
+	write(STDERR_FILENO, globals.outbuf, globals.self.length + 30);
+	for (i = 0; argv[1][i] != '\0'; i++)
+		;
+	write(STDERR_FILENO, argv[1], i);
+	write(STDERR_FILENO, "'.\n", 3);
+	return (1);
+}
+
+
 /**
  * run_builtin - run the builtin commands we implemented
  * @argv: pointer to a tokenized array of strings
@@ -78,9 +113,10 @@ int builtin_env(char **argv __attribute__((unused)), char **envp)
  */
 char run_builtin(char **argv, char **envp)
 {
-	static builtin functions[2] = {&builtin_exit, &builtin_env};
-	static char *commands[] = {"exit", "env"};
-	static unsigned int const count = 2;
+	static builtin functions[] = {NULL, &builtin_env, &builtin_exit,
+		&builtin_help};
+	static char const *commands[] = {"cd", "env", "exit", "help"};
+	static unsigned int const count = 4;
 	static size_t const max = 4;
 	unsigned int i;
 

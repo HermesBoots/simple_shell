@@ -1,0 +1,35 @@
+static char const help_general[] = "These shell commands are defined internally.\n"
+"Type `help name' to find out more about the function `name'.\n"
+"Use `man -k' or `info' to find out more about commands not in this list.\n"
+"\n"
+"cd\n"
+"env\n"
+"exit\n"
+"help\n";
+static size_t const len_general = sizeof(help_general) - 1;
+
+static char const help_cd[] = "Usage: cd [-|PATH]\n"
+"With no arguments, changes the working directory to the path stored in the\n"
+"$HOME environment variable. When the first argument is `-', changes the\n"
+"working directory to the previous one. Otherwise, changes the working\n"
+"directory to PATH.\n";
+
+static char const help_env[] = "Usage: env\n"
+"Prints out all current environment variables in unspecified order.\n";
+
+static char const help_exit[] = "Usage: exit [STATUS]\n"
+"With no arguments, exits with the status of the previous command.\n"
+"If STATUS is a number in the range 0-2147483647, exits with that status.\n"
+"If STATUS contains non-digit characters or isn't within that range, does not\n"
+"exit.\n";
+
+static char const help_help[] = "Usage: help [COMMAND]\n"
+"With no arguments, prints a list of built-in commands. Otherwise prints\n"
+"an explanation of COMMAND if it exists.\n";
+
+static size_t const lengths[] = {
+	sizeof(help_cd) - 1,
+	sizeof(help_env) - 1,
+	sizeof(help_exit) - 1,
+	sizeof(help_help) - 1
+};
