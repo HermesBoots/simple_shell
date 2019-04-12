@@ -38,8 +38,7 @@ ssize_t _getline(char **line, size_t *size, int fd)
 {
 	static size_t unused, terminated;
 	size_t i, j, total;
-	ssize_t count;
-
+	ssize_t count = 0;
 	if (*line == NULL)
 	{
 		*size = 128, *line = malloc(128);
@@ -56,7 +55,7 @@ ssize_t _getline(char **line, size_t *size, int fd)
 	}
 	total = unused;
 	do {
-		for (i = 0; i < total; i++)
+		for (i = total - count; i < total; i++)
 		{
 			if (line[0][i] == '\n')
 			{
