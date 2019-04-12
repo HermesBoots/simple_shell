@@ -37,11 +37,9 @@ void setup(int argc, char *argv[], char *envp[])
 		globals.input = open(argv[1], O_RDONLY);
 		if (globals.input < 0)
 		{
-			for (; argv[0][index] != '\0'; index++)
-				;
-			_strncpy(globals.outbuf, argv[0], index);
-			_strncpy(globals.outbuf + index, ": 0: ", 5);
-			write(STDERR_FILENO, globals.outbuf, index + 5);
+			_strncpy(globals.outbuf, argv[0], globals.self.length);
+			_strncpy(globals.outbuf + globals.self.length, ": 0: ", 5);
+			write(STDERR_FILENO, globals.outbuf, globals.self.length + 5);
 			for (; argv[1][index] != '\0'; index++)
 				;
 			write(STDERR_FILENO, "Can't open ", 11);
@@ -81,7 +79,7 @@ int main(int argc, char *argv[], char *envp[])
 	char found;
 	char **parsed;
 	size_t size;
-	ssize_t count;
+	ssize_t count = 0;
 
 	setup(argc, argv, envp);
 	while (1)
