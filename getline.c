@@ -4,29 +4,6 @@
 
 
 /**
- * _realloc - copies bytes into a new, larger location.
- * @ptr: string to reallocate
- * @size: amount of bytes to make the new memory
- *
- * Return: void pointer
- */
-void *_realloc(void *ptr, size_t size)
-{
-	char *old, *new;
-	size_t i;
-
-	old = ptr;
-	new = malloc(size);
-	if (new == NULL)
-		error(NULL);
-	for (i = 0; i < size / 2; i++)
-		new[i] = old[i];
-	free(old);
-	return (new);
-}
-
-
-/**
  * _getline - takes the user input and puts it in a string
  * @line: the line to put into a string
  * @size: the size of the buffer line is put into
@@ -39,6 +16,7 @@ ssize_t _getline(char **line, size_t *size, int fd)
 	static size_t unused, terminated;
 	size_t i, j, total;
 	ssize_t count = 0;
+
 	if (*line == NULL)
 	{
 		*size = 128, *line = malloc(128);

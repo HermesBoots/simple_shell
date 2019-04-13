@@ -1,6 +1,31 @@
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include "common.h"
+
+
+/**
+ * _realloc - copies bytes into a new, larger location.
+ * @ptr: string to reallocate
+ * @size: amount of bytes to make the new memory
+ *
+ * Return: void pointer
+ */
+void *_realloc(void *ptr, size_t size)
+{
+	char *old, *new;
+	size_t i;
+
+	old = ptr;
+	new = malloc(size);
+	if (new == NULL)
+		error(NULL);
+	for (i = 0; i < size / 2; i++)
+		new[i] = old[i];
+	free(old);
+	return (new);
+}
 
 
 /**
