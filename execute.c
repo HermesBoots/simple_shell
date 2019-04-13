@@ -12,11 +12,10 @@
 /**
  * find_in_path - searches in PATH environment variable for argv[0]
  * @argv: argv array to be given to child process
- * @envp: pointer to environment variables
  *
  * Return: Nothing?
  */
-char find_in_path(char **argv, char **envp)
+char find_in_path(char **argv)
 {
 	int code = ENOENT;
 	size_t index;
@@ -32,7 +31,7 @@ char find_in_path(char **argv, char **envp)
 		errno = 0;
 		if (access(globals.outbuf, F_OK) == 0)
 		{
-			execve(globals.outbuf, argv, envp);
+			execve(globals.outbuf, argv, collect_env());
 			code = errno;
 		}
 		tok = _strtok(NULL, ":");
@@ -51,9 +50,8 @@ char find_in_path(char **argv, char **envp)
 /**
  * find_command - searches for path to argv[0]
  * @argv: argv array to be given to child process
- * @envp: pointer to environment variables
  */
-void find_command(char **argv, char **envp)
+void find_command(char **argv)
 {
 	size_t index;
 
@@ -64,7 +62,7 @@ void find_command(char **argv, char **envp)
 		{
 			if (access(argv[0], F_OK) == 0)
 			{
-				execve(argv[0], argv, envp);
+				execve(argv[0], argv, collect_env());
 				free(argv);
 				error(NULL);
 				free(globals.line);
@@ -79,16 +77,15 @@ void find_command(char **argv, char **envp)
 			}
 		}
 	}
-	find_in_path(argv, envp);
+	find_in_path(argv);
 }
 
 
 /**
  * run_program - Child finds program, if found executes program
  * @argv: the entire command line as broken up tokens
- * @envp: pointer to environment variables
  */
-void run_program(char **argv, char **envp)
+void run_program(char **argv)
 {
 	pid_t pid;
 	int status;
@@ -96,7 +93,7 @@ void run_program(char **argv, char **envp)
 	pid = fork();
 	if (pid == 0)
 	{
-		find_command(argv, envp);
+		find_command(argv);
 	}
 	else if (pid > 0)
 	{

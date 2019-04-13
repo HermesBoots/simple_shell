@@ -22,12 +22,10 @@ void sigint_handler(int sig __attribute__((unused)))
  * setup - initalising the global variables
  * @argc: number of arguments
  * @argv: array of strings
- * @envp: list of environment variables
  */
-void setup(int argc, char *argv[], char *envp[])
+void setup(int argc, char *argv[])
 {
 	int index = 0;
-	char *path = "PATH=";
 
 	globals.self.text = argv[0];
 	while (argv[0][globals.self.length] != '\0')
@@ -57,12 +55,6 @@ void setup(int argc, char *argv[], char *envp[])
 		globals.interactive = 1;
 		signal(SIGINT, &sigint_handler);
 	}
-	globals.path = "";
-	for (; envp[index] != NULL; index++)
-	{
-		if (_strncmp(envp[index], path, 5) == 0)
-			globals.path = envp[index];
-	}
 }
 
 
@@ -81,7 +73,9 @@ int main(int argc, char *argv[], char *envp[])
 	size_t size;
 	ssize_t count = 0;
 
-	setup(argc, argv, envp);
+	init_environ(envp);
+	printf("%s\n", globals.path);
+	setup(argc, argv);
 	while (1)
 	{
 		errno = 0;
@@ -94,9 +88,9 @@ int main(int argc, char *argv[], char *envp[])
 		parsed = parse(globals.line);
 		if (parsed == NULL)
 			continue;
-		found = run_builtin(parsed, envp);
+		found = run_builtin(parsed);
 		if (!found)
-			run_program(parsed, envp);
+			run_program(parsed);
 		free(parsed);
 	}
 	if (errno == 0 && globals.interactive)
