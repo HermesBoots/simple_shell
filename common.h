@@ -19,6 +19,20 @@ typedef struct SubString
 
 
 /**
+ * struct ShellVar - stores the information needed for shell environment vars
+ * @capacity: number of bytes allocated outside this struct to store the var
+ * @name: variable name
+ * @val: variable value
+ */
+typedef struct ShellVar
+{
+	size_t capacity;
+	SubString *name;
+	SubString *val;
+} ShellVar;
+
+
+/**
  * struct ShellGlobals - stores state of the shell that many functions need
  * @command: first word of command line
  * @self: the original argv[0]
@@ -59,9 +73,14 @@ void _memcpy(char *dest, char const *src, size_t count);
 size_t print_int(char *buffer, int64_t val);
 SubString _strtok(char *str, char const *delim);
 char **parse(char *str);
-char run_builtin(char **argv, char **envp);
-void run_program(char **argv, char **envp);
+char run_builtin(char **argv);
+void run_program(char **argv);
 ssize_t _getline(char **line, size_t *size, int fd);
+void *_realloc(void *ptr, size_t size);
+void init_environ(char **envp);
+void update_env(char *name, char *val);
+char **collect_env(void);
+int del_env(char *name);
 
 
 #endif
