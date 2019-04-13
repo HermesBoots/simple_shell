@@ -3,6 +3,10 @@
 #include <unistd.h>
 #include "common.h"
 
+
+#include "builtins2.c"
+
+
 /**
  * builtin_exit - exits the shell
  * @argv: pointer to tokenized command line string
@@ -47,6 +51,7 @@ int builtin_exit(char **argv, char **envp __attribute__((unused)))
 	return (2);
 }
 
+
 /**
  * builtin_env - creating the BUILT-IN envp variable for our shell
  * @argv: pointer to tokenized command line string
@@ -73,10 +78,12 @@ int builtin_env(char **argv __attribute__((unused)), char **envp)
 int builtin_help(char **argv, char **envp __attribute__((unused)))
 {
 #include "help_pages.def"
-	static char const *commands[] = {"cd", "env", "exit", "help"};
-	static char const *pages[] = {help_cd, help_env, help_exit, help_help};
-	static unsigned int const count = 4;
-	static size_t const max = 4;
+	static char const *commands[] = {"cd", "env", "exit", "help", "setenv",
+		"unsetenv"};
+	static char const *pages[] = {help_cd, help_env, help_exit, help_help,
+		help_setenv, help_unsetenv};
+	static unsigned int const count = 6;
+	static size_t const max = 8;
 	unsigned int i;
 
 	if (argv[1] == NULL)
@@ -107,24 +114,24 @@ int builtin_help(char **argv, char **envp __attribute__((unused)))
 /**
  * run_builtin - run the builtin commands we implemented
  * @argv: pointer to a tokenized array of strings
- * @envp: pointer to the environment variable
  *
  * Return: 1 on success, 0 on failure
  */
-char run_builtin(char **argv, char **envp)
+char run_builtin(char **argv)
 {
 	static builtin functions[] = {NULL, &builtin_env, &builtin_exit,
-		&builtin_help};
-	static char const *commands[] = {"cd", "env", "exit", "help"};
-	static unsigned int const count = 4;
-	static size_t const max = 4;
+		&builtin_help, &builtin_setenv, &builtin_unsetenv};
+	static char const *commands[] = {"cd", "env", "exit", "help", "setenv",
+		"unsetenv"};
+	static unsigned int const count = 6;
+	static size_t const max = 8;
 	unsigned int i;
 
 	for (i = 0; i < count; i++)
 	{
 		if (_strncmp(commands[i], argv[0], max) == 0)
 		{
-			globals.last_status = functions[i](argv, envp);
+			globals.last_status = functions[i](argv, collect_env());
 			return (1);
 		}
 	}

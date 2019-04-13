@@ -27,9 +27,18 @@ static char const help_help[] = "Usage: help [COMMAND]\n"
 "With no arguments, prints a list of built-in commands. Otherwise prints\n"
 "an explanation of COMMAND if it exists.\n";
 
+static char const help_setenv[] = "Usage: setenv NAME VALUE\n"
+"Sets an environment variable called NAME to VALUE. If that variable doesn't\n"
+"exist, it is created first.\n";
+
+static char const help_unsetenv[] = "Usage: unsetenv NAME\n"
+"Deletes an environment variable called NAME if it exists.\n";
+
 static size_t const lengths[] = {
 	sizeof(help_cd) - 1,
 	sizeof(help_env) - 1,
 	sizeof(help_exit) - 1,
-	sizeof(help_help) - 1
+	sizeof(help_help) - 1,
+	sizeof(help_setenv) - 1,
+	sizeof(help_unsetenv) - 1
 };
