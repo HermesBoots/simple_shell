@@ -23,6 +23,19 @@ When
 starts, it reads its command history from
 .I $HOME/.simple_shell_history
 . It also writes the history of each session to the end of this file when it exits.
+.SH BUILT-IN COMMANDS
+.IP cd
+Changes the working directory. This affects relative path names typed on the command line.
+.IP env
+Prints a list of environment variables currently used by the shell.
+.IP exit
+With no arguments, exits the shell with the status of the previous command. With a numeric argumet, exits with the given status code.
+.IP help
+Prints out explanation on how to use built-in commands.
+.IP setenv
+Adds environment variables or changes their values.
+.IP unsetenv
+Deteles environment variables in the shell.
 .SH ENVIRONMENT
 .IP PATH
 As in typical shells,
