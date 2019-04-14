@@ -4,7 +4,9 @@
 #include "common.h"
 
 
-#include "builtins2.c"
+extern int builtin_setenv(char **argv, char **envp);
+extern int builtin_unsetenv(char **argv, char **envp);
+extern int builtin_cd(char **argv, char **envp);
 
 
 /**
@@ -74,7 +76,13 @@ int builtin_env(char **argv __attribute__((unused)), char **envp)
 	return (0);
 }
 
-
+/**
+ * builtin_help - opens up the help text for a command
+ * @argv: builtin to run help on
+ * @envp: pointer to environment variable
+ *
+ * Return: 0 on success, 1 on failure
+ */
 int builtin_help(char **argv, char **envp __attribute__((unused)))
 {
 #include "help_pages.def"
@@ -119,7 +127,7 @@ int builtin_help(char **argv, char **envp __attribute__((unused)))
  */
 char run_builtin(char **argv)
 {
-	static builtin functions[] = {NULL, &builtin_env, &builtin_exit,
+	static builtin functions[] = {&builtin_cd, &builtin_env, &builtin_exit,
 		&builtin_help, &builtin_setenv, &builtin_unsetenv};
 	static char const *commands[] = {"cd", "env", "exit", "help", "setenv",
 		"unsetenv"};
