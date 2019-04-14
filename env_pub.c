@@ -58,7 +58,7 @@ int del_env(char *name)
 	if (ivar == NOT_FOUND)
 		return (0);
 	free(env.arr[ivar].name);
-	for (; ivar < env.count; ivar++)
+	for (; ivar < env.count - 1; ivar++)
 		_memcpy(
 			(void *)&env.arr[ivar],
 			(void *)&env.arr[ivar + 1],
