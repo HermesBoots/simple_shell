@@ -25,6 +25,7 @@ void sigint_handler(int sig __attribute__((unused)))
  */
 void setup(int argc, char *argv[])
 {
+	char *buffer;
 	int index = 0;
 
 	globals.self.text = argv[0];
@@ -55,6 +56,11 @@ void setup(int argc, char *argv[])
 		globals.interactive = 1;
 		signal(SIGINT, &sigint_handler);
 	}
+	buffer = getcwd(NULL, 0);
+	if (buffer == NULL)
+		error(NULL);
+	update_env("PWD", buffer);
+	free(buffer);
 }
 
 
@@ -74,7 +80,6 @@ int main(int argc, char *argv[], char *envp[])
 	ssize_t count = 0;
 
 	init_environ(envp);
-	printf("%s\n", globals.path);
 	setup(argc, argv);
 	while (1)
 	{
