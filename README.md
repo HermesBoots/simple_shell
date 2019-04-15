@@ -6,17 +6,31 @@ simple_shell is our attempt to recreate a basic shell to communicate with the
 operating system. We are using the C programing language to write all our
 sourcecode.
 
-### Features
+### Built-ins
 
-1. Accept commands from the command line
-2. Execute simple commands
-3. Handle errors
-4. Handle comand line arguments
-5. Handle PATH
-6. EXIT
-7. Can print current environment
+`cd`
+Changes the working directory. This affects relative path names typed on the command line.
+Example usage: `$ cd /usr/bin`
 
-Basically, we want to replicate the basic features of `/bin/sh`
+`env`
+Prints a list of environment variables currently used by the shell.
+Example usage: `$ env`
+
+`exit`
+With no arguments, exits the shell with the status of the previous command. With a numeric argumet, exits with the given status code.
+Example usage: `$ exit`
+
+`help`
+Prints out explanation on how to use built-in commands.
+Example usage: `$ help cd` 
+
+`setenv`
+Adds environment variables or changes their values.
+Example: `$ setenv Test this/is/a/path`
+
+`unsetenv`
+Deteles environment variables in the shell.
+Example usage: `$ unsetenv Test`
 
 ## Installation
 
@@ -37,8 +51,7 @@ You should get a listing of all the files in your current directory.
 
 ## Bugs
 
-Many many bugs! This was a learning exercise, so expect things to not work or
-break. Feel free to messege either of the authors when a bug is found. We
+Feel free to messege either of the authors when a bug is found. We
 may go back and fix it!
 
 ## Authors
