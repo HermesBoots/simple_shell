@@ -9,27 +9,39 @@ sourcecode.
 ### Built-ins
 
 `cd`
+
 Changes the working directory. This affects relative path names typed on the command line.
+
 Example usage: `$ cd /usr/bin`
 
 `env`
+
 Prints a list of environment variables currently used by the shell.
+
 Example usage: `$ env`
 
 `exit`
+
 With no arguments, exits the shell with the status of the previous command. With a numeric argumet, exits with the given status code.
+
 Example usage: `$ exit`
 
 `help`
+
 Prints out explanation on how to use built-in commands.
+
 Example usage: `$ help cd` 
 
 `setenv`
+
 Adds environment variables or changes their values.
+
 Example: `$ setenv Test this/is/a/path`
 
 `unsetenv`
+
 Deteles environment variables in the shell.
+
 Example usage: `$ unsetenv Test`
 
 ## Installation
