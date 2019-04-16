@@ -18,7 +18,7 @@ char **parse(char *str)
 	SubString token;
 	char **ret;
 
-	token = _strtok(str, " \n\t\r");
+	token = _strtok(str, " \n\t\r;");
 	globals.command = token;
 	while (token.text != NULL)
 	{
@@ -26,7 +26,7 @@ char **parse(char *str)
 			break;
 		count++;
 		total += token.length;
-		token = _strtok(NULL, " \n\t\r");
+		token = _strtok(NULL, " \n\t\r;");
 	}
 	if (count == 0)
 		return (NULL);
@@ -38,7 +38,7 @@ char **parse(char *str)
 	}
 	ret[0] = (char *)(ret + count + 1);
 	ret[count] = NULL;
-	token = _strtok(str, " \n\t\r");
+	token = _strtok(str, " \n\t\r;");
 	total = 0, count = 0;
 	while (token.text != NULL)
 	{
@@ -49,7 +49,7 @@ char **parse(char *str)
 		_memcpy(ret[count], token.text, token.length);
 		ret[count][token.length] = '\0';
 		count++;
-		token = _strtok(NULL, " \n\t\r");
+		token = _strtok(NULL, " \n\t\r;");
 	}
 	return (ret);
 }

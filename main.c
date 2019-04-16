@@ -84,7 +84,7 @@ int main(int argc, char *argv[], char *envp[])
 	while (1)
 	{
 		errno = 0;
-		if (globals.interactive)
+		if (globals.interactive && (!globals.line || globals.line[count - 1] != ';'))
 			write(STDERR_FILENO, "$ ", 2);
 		count = _getline(&globals.line, &size, globals.input);
 		globals.line_num++;

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "common.h"
@@ -14,7 +15,7 @@
 ssize_t _getline(char **line, size_t *size, int fd)
 {
 	static size_t unused, terminated;
-	size_t i, j, total;
+	size_t i, j, total = 0;
 	ssize_t count = 0;
 
 	if (*line == NULL)
@@ -31,11 +32,11 @@ ssize_t _getline(char **line, size_t *size, int fd)
 		for (j = 0; j < unused; j++, i++)
 			line[0][j] = line[0][i];
 	}
-	total = unused;
+	total = unused, count = unused;
 	do {
 		for (i = total - count; i < total; i++)
 		{
-			if (line[0][i] == '\n')
+			if (line[0][i] == '\n' || line[0][i] == ';')
 			{
 				if (++i < total)
 					terminated = line[0][i];
