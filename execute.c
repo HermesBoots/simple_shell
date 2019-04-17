@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -18,26 +17,15 @@
  */
 char find_in_path(char **argv)
 {
-	char empty_token = 0, *current;
 	int code = ENOENT;
 	size_t index;
 	SubString tok;
 
-	for (current = globals.path; *current != '\0'; current++)
-	{
-		if (*current == ':' && (*++current == ':' || *current == '\0'))
-		{
-			empty_token = 1;
-			break;
-		}
-	}
-	if (globals.path[0] == ':')
-		empty_token = 1;
 	tok = _strtok(globals.path, ":");
 	while (tok.text != NULL)
 	{
 		index = _strncpy(globals.outbuf, tok.text, MIN(tok.length, 4097));
-		if (index > 0 && globals.outbuf[index - 1] != '/')
+		if (globals.outbuf[index - 1] != '/')
 			globals.outbuf[index++] = '/';
 		index += _strncpy(globals.outbuf + index, argv[0], 4097 - index);
 		errno = 0;
@@ -47,8 +35,6 @@ char find_in_path(char **argv)
 			code = errno;
 		}
 		tok = _strtok(NULL, ":");
-		if (empty_token && tok.text == NULL)
-			tok.text = "", tok.length = 0, empty_token = 0;
 	}
 	errno = code;
 	free(argv);
