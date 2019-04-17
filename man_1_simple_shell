@@ -46,7 +46,16 @@ This directory is where
 .B hsh
 stores and reads its history file.
 .SH BUGS
-There is currently no entry point so the project won't compile.
+.B hsh
+behaves differently than
+.B sh
+in some situations, such as when encountering repeated semicolons or when it fails to allocate memory.
+.B hsh
+also does not handle when
+.I read
+and
+.I write
+system calls fail.
 .SH AUTHORS
 Sam Hermes <701@holbertonschool.com>
 
