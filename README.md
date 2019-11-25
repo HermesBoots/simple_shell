@@ -69,4 +69,4 @@ may go back and fix it!
 ## Authors
 Sam Hermes: *HermesBoots*
 
-Kyle Litscher: *klitscher*
+[Kyle Litscher](https://github.com/klitscher) | [LinkedIn](https://www.linkedin.com/in/kylelitscher/) | [Twitter](https://twitter.com/Coding_KGL)
